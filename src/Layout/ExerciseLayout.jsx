@@ -9,6 +9,7 @@ import catpeeping from "../assets/catpeeping.json"
 import { motion } from "framer-motion";
 import moodygiraffe from "../assets/moodygiraffe.json"
 import basketball from "../assets/playbasketball.json"
+import thinkingmonkey from "../assets/thinkingmonkey.json"
 
 
 
@@ -26,8 +27,15 @@ const [exercise, setExercise] = React.useState(null)
 const [points, setPoints] = React.useState(0)
 
 const [goalPoints, setGoalPoints] = React.useState(false)
-console.log(points)
-console.log(isCorrect)
+
+const [secondGuess, setSecondGuess] = React.useState(null)
+
+const [hasAnswered, setHasAnswered]  = React.useState(null)
+console.log(hasAnswered)
+console.log(secondGuess)
+
+
+
 
 
 
@@ -109,13 +117,23 @@ function checkAnswers(){
     const correct = exercise.answer === userAnswer
 
     setIsCorrect(correct)
-    if(!correct){setCorrectAnswer(exercise.answer)}
+
+    if(!correct){
+        setSelected("")
+        setHasAnswered(true)
+    }
+    if(hasAnswered){
+        setSecondGuess(correct)
+        setCorrectAnswer(exercise.answer)
+    }
 
 }
 
 function nextQuestion (){
-
+    
     setExercise(generateExercise(exercise.type))
+    setHasAnswered(false)
+    setSecondGuess(null)
     setSelected("")
     setIsCorrect(null)
     setCorrectAnswer("")
@@ -150,7 +168,7 @@ const meditatingFox = isCorrect === false && <Lottie
             autoplay
             className="meditating-fox"/>
 
-const catPeeping = isCorrect === false && <Lottie
+const catPeeping = secondGuess === false && <Lottie
             animationData={catpeeping}
             loop={false}
             autoplay
@@ -162,7 +180,12 @@ const playBasketball = goalPoints === true && <Lottie
             autoplay
             className="play-basketball"/>
 
-
+const thinkingMonkey = isCorrect === false && <Lottie
+            animationData={thinkingmonkey}
+            loop
+            autoplay
+            className="thinking-monkey"
+            />
 
     return(
         <>
@@ -184,7 +207,7 @@ const playBasketball = goalPoints === true && <Lottie
             
             <BouncyButton onClick={deleteNum}>DELETE</BouncyButton>
             <BouncyButton onClick={checkAnswers}>CHECK ANSWER</BouncyButton>
-            <BouncyButton onClick={nextQuestion}> NEXT QUESTION</BouncyButton>
+            {(isCorrect===true || secondGuess !== null)&&(<BouncyButton onClick={nextQuestion}> NEXT QUESTION</BouncyButton>)}
 
             </div>
 
@@ -203,7 +226,9 @@ const playBasketball = goalPoints === true && <Lottie
                         celebratingGiraffe, 
                         meditatingFox, 
                         catPeeping,
-                        points
+                        points,
+                        secondGuess,
+                        thinkingMonkey
                           
         }}/>
 

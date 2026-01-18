@@ -2,10 +2,6 @@ import React from "react";
 import {useOutletContext} from "react-router-dom";
 import { motion } from "framer-motion";
 
-/*Fix mobile version
-Fix point counting
-Fix Text with giraffe*/ 
-
 
 export default function Exercise ({}){
 
@@ -18,11 +14,13 @@ export default function Exercise ({}){
             meditatingFox,
             catPeeping,
             isCorrect,
-            points} = useOutletContext()
+            points,
+            secondGuess, 
+            thinkingMonkey} = useOutletContext()
     if (!exercise) return null 
 
-console.log("ex ran")
 
+console.log(correctAnswer)
     return(
         <>
         
@@ -31,7 +29,7 @@ console.log("ex ran")
             
         <div className="exercise-main">
         
-                 {isCorrect===false &&<div className="correct-answer-container">
+                 {secondGuess===false &&<div className="correct-answer-container">
                     
                     <span className="correct-answer-span">Correct Answer:</span>
                     
@@ -62,7 +60,7 @@ console.log("ex ran")
 
                 <div className="inline-container">
 
-                    {isCorrect === null && <div className="question">
+                    {(isCorrect === null && secondGuess===null || isCorrect===false && secondGuess===null)&&(<div className="question">
                     <motion.p
                         className="motion-p"
                         key={exercise.question}
@@ -75,13 +73,25 @@ console.log("ex ran")
                         }}>
                         {exercise.question}<span className="question-span"> = </span> 
                     </motion.p>
-                    </div>}
+                    </div>)}
 
                     {isCorrect === null &&<div className="thinking-robot-container">
 
                             {thinkingRobot}
 
                     </div>}
+
+                    {(isCorrect===false && secondGuess===null )&& (<div className="thinking-monkey-container">
+
+                        {thinkingMonkey}
+
+                        <p className="thinking-monkey-p">Hm... are you sure?</p>
+                        
+                        
+                        
+                        </div>)}
+
+
                     
                     {isCorrect===true&&<div className="right-answer-container">
 
@@ -102,7 +112,7 @@ console.log("ex ran")
 
             </div>
 
-            {isCorrect===null&&<div className="answer-container">
+            {(isCorrect===null && secondGuess === null|| isCorrect===false && secondGuess === null)&& (<div className="answer-container">
                 <motion.p
                         key={selected}
                         initial={{ scale: 0.8, opacity: 0 }}
@@ -114,8 +124,11 @@ console.log("ex ran")
                         }}>
                     {selected}
                 </motion.p>
-            </div>
-}
+            </div>)
+            }
+
+
+
             
             <div className="numbers-container">
             {displayNum}
